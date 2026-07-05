@@ -90,4 +90,64 @@
         <a href="{{ route('admin.products.index') }}" class="px-5 py-2.5 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors">Cancel</a>
     </div>
 </form>
+
+{{-- Image Management --}}
+<div class="mt-8 max-w-3xl">
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Product Images</h3>
+
+    @if(session('success'))
+    <div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-300">
+        {{ session('success') }}
+    </div>
+    @endif
+
+    {{-- Upload Form --}}
+    <form action="{{ route('admin.products.images.store', $product) }}" method="POST" enctype="multipart/form-data" class="mb-6">
+        @csrf
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-900 dark:border-gray-800 p-6">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Upload Images</label>
+            <input type="file" name="images[]" multiple accept="image/*"
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900/30 dark:file:text-indigo-400">
+            <p class="mt-1 text-xs text-gray-400">Max 10 images, 2MB each. JPG, PNG, WebP.</p>
+            <button type="submit" class="mt-3 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">Upload</button>
+        </div>
+    </form>
+
+    {{-- Existing Images --}}
+    @if($product->images->count())
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        @foreach($product->images as $image)
+        <div class="relative group bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm dark:bg-gray-900 dark:border-gray-800">
+            <div class="aspect-square">
+                <img src="{{ Storage::disk('public')->url($image->image_path) }}" alt="" class="w-full h-full object-cover">
+            </div>
+            @if($image->is_primary)
+            <span class="absolute top-2 left-2 px-2 py-0.5 bg-indigo-600 text-white text-xs font-medium rounded">Primary</span>
+            @endif
+            <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                @unless($image->is_primary)
+                <form action="{{ route('admin.products.images.primary', [$product, $image]) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="p-1.5 bg-white/90 dark:bg-gray-800/90 rounded-lg hover:bg-white dark:hover:bg-gray-800 transition-colors" title="Set primary">
+                        <i data-lucide="star" class="w-3.5 h-3.5 text-amber-500"></i>
+                    </button>
+                </form>
+                @endunless
+                <form action="{{ route('admin.products.images.destroy', [$product, $image]) }}" method="POST" onsubmit="return confirm('Delete this image?')">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="p-1.5 bg-white/90 dark:bg-gray-800/90 rounded-lg hover:bg-white dark:hover:bg-gray-800 transition-colors" title="Delete">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5 text-red-500"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        @endforeach
+    </div>
+    @else
+    <div class="text-center py-8 bg-white border border-gray-200 rounded-xl dark:bg-gray-900 dark:border-gray-800">
+        <i data-lucide="image" class="w-8 h-8 text-gray-400 mx-auto mb-2"></i>
+        <p class="text-sm text-gray-500 dark:text-gray-400">No images yet. Upload some above.</p>
+    </div>
+    @endif
+</div>
 @endsection

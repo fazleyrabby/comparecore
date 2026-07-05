@@ -19,9 +19,22 @@
 
             {{-- Product Header --}}
             <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
+                @if($product->images->count())
+                <div class="h-64 bg-gray-100 dark:bg-gray-800">
+                    <img src="{{ Storage::disk('public')->url($product->images->first()->image_path) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                </div>
+                @if($product->images->count() > 1)
+                <div class="flex gap-2 p-4 overflow-x-auto">
+                    @foreach($product->images as $image)
+                    <img src="{{ Storage::disk('public')->url($image->image_path) }}" alt="" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 {{ $loop->first ? 'ring-2 ring-indigo-500' : 'opacity-60 hover:opacity-100' }}">
+                    @endforeach
+                </div>
+                @endif
+                @else
                 <div class="h-48 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center">
                     <i data-lucide="package" class="w-20 h-20 text-indigo-300 dark:text-indigo-700"></i>
                 </div>
+                @endif
                 <div class="p-6">
                     <div class="flex items-center gap-3 mb-3">
                         @if($product->brand)

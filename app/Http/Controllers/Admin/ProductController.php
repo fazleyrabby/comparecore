@@ -58,6 +58,17 @@ class ProductController extends Controller
         $product->categories()->sync($categories);
         $product->tags()->sync($tags);
 
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $file) {
+                $path = $file->store('products', 'public');
+                $product->images()->create([
+                    'image_path' => $path,
+                    'is_primary' => $index === 0,
+                    'sort_order' => $index,
+                ]);
+            }
+        }
+
         return redirect()->route('admin.products.index')->with('success', 'Product created.');
     }
 

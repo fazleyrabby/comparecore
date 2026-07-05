@@ -1,5 +1,7 @@
 @extends('public.layouts.app')
 
+@use('Illuminate\Support\Facades\Storage')
+
 @section('title', 'Products')
 
 @section('content')
@@ -13,7 +15,11 @@
         @forelse($products as $product)
         <a href="{{ route('public.products.show', $product->slug) }}" class="group block bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:shadow-lg hover:border-indigo-300 dark:hover:border-indigo-700 transition-all">
             <div class="h-40 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center">
-                <i data-lucide="package" class="w-12 h-12 text-indigo-300 dark:text-indigo-700"></i>
+                @if($product->images->count())
+                    <img src="{{ Storage::disk('public')->url($product->images->first()->image_path) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                @else
+                    <i data-lucide="package" class="w-12 h-12 text-indigo-300 dark:text-indigo-700"></i>
+                @endif
             </div>
             <div class="p-5">
                 <div class="flex items-center gap-2 mb-2">

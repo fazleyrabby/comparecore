@@ -10,7 +10,7 @@
     <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Add Product</h2>
 </div>
 
-<form action="{{ route('admin.products.store') }}" method="POST" class="max-w-3xl">
+<form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="max-w-3xl">
     @csrf
     <div class="bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-900 dark:border-gray-800 p-6 space-y-5">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -77,6 +77,13 @@
                 <option value="published" {{ old('status') === 'published' ? 'selected' : '' }}>Published</option>
             </select>
             @error('status') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Images</label>
+            <input type="file" name="images[]" multiple accept="image/*"
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900/30 dark:file:text-indigo-400">
+            <p class="mt-1 text-xs text-gray-400">Optional. Max 10 images, 2MB each.</p>
         </div>
     </div>
 
