@@ -40,7 +40,7 @@
             'type' => 'item',
             'label' => 'Tags',
             'icon' => 'tags',
-            'route' => '#',
+            'route' => route('admin.tags.index'),
             'pattern' => 'admin/tags*',
         ],
         [

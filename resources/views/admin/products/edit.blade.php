@@ -87,6 +87,12 @@
 
     <div class="mt-6 flex items-center gap-3">
         <button type="submit" class="px-5 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">Update Product</button>
+        <a href="{{ route('admin.products.pricing.index', $product) }}" class="inline-flex items-center gap-2 px-4 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <i data-lucide="credit-card" class="w-4 h-4"></i> Pricing
+        </a>
+        <a href="{{ route('admin.products.affiliate.index', $product) }}" class="inline-flex items-center gap-2 px-4 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <i data-lucide="link" class="w-4 h-4"></i> Affiliates
+        </a>
         <a href="{{ route('admin.products.index') }}" class="px-5 py-2.5 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors">Cancel</a>
     </div>
 </form>

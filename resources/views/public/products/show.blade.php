@@ -55,6 +55,34 @@
                 </div>
             </div>
 
+            {{-- Pricing --}}
+            @if($product->pricingPlans->where('is_active', true)->count())
+            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Pricing</h2>
+                </div>
+                <div class="divide-y divide-gray-100 dark:divide-gray-800">
+                    @foreach($product->pricingPlans->where('is_active', true) as $plan)
+                    <div class="px-6 py-4 flex items-center justify-between">
+                        <div>
+                            <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $plan->name }}</span>
+                            @if($plan->description)
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ $plan->description }}</p>
+                            @endif
+                        </div>
+                        <div class="text-right">
+                            <span class="text-lg font-bold text-gray-900 dark:text-white">{{ $plan->formatted_price }}</span>
+                            @if($plan->original_price && $plan->original_price > $plan->price)
+                            <span class="ml-1.5 text-sm text-gray-400 line-through">${{ number_format($plan->original_price, 2) }}</span>
+                            @endif
+                            <span class="block text-xs text-gray-500 dark:text-gray-400 capitalize">{{ str_replace('_', ' ', $plan->billing_cycle) }}</span>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
             {{-- Attributes --}}
             @if($product->attributes && count($product->attributes))
             <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl">
@@ -122,22 +150,36 @@
             </div>
             @endif
 
-            {{-- Actions --}}
+            {{-- Affiliate Links --}}
+            @if($product->affiliateLinks->where('is_active', true)->count())
             <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
-                <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Actions</h3>
+                <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Get Started</h3>
                 <div class="space-y-2">
-                    @if($product->brand && $product->brand->website_url)
-                    <a href="{{ $product->brand->website_url }}" target="_blank" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                    @foreach($product->affiliateLinks->where('is_active', true) as $link)
+                    <a href="{{ $link->display_url }}" target="_blank" rel="nofollow sponsored" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
                         <i data-lucide="external-link" class="w-4 h-4"></i>
-                        Visit Website
+                        {{ $link->name }}
+                        @if($link->coupon_code)
+                        <span class="ml-1 text-xs bg-white/20 px-1.5 py-0.5 rounded">{{ $link->coupon_code }}</span>
+                        @endif
                     </a>
-                    @endif
-                    <button onclick="addToCompare('{{ $product->slug }}', '{{ $product->name }}')" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                        <i data-lucide="git-compare" class="w-4 h-4"></i>
-                        Add to Compare
-                    </button>
+                    @endforeach
+                    <p class="text-xs text-gray-400 text-center mt-1">We may earn a commission. Prices may vary.</p>
                 </div>
             </div>
+            @elseif($product->brand && $product->brand->website_url)
+            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+                <a href="{{ $product->brand->website_url }}" target="_blank" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                    <i data-lucide="external-link" class="w-4 h-4"></i>
+                    Visit Website
+                </a>
+            </div>
+            @endif
+
+            <button onclick="addToCompare('{{ $product->slug }}', '{{ $product->name }}')" class="flex items-center justify-center gap-2 w-full px-4 py-2.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <i data-lucide="git-compare" class="w-4 h-4"></i>
+                Add to Compare
+            </button>
         </div>
     </div>
 

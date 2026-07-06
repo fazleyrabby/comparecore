@@ -18,7 +18,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        $product->load(['brand', 'categories', 'tags', 'images']);
+        $product->load(['brand', 'categories', 'tags', 'images', 'pricingPlans', 'affiliateLinks']);
 
         $relatedProducts = Product::where('status', 'published')
             ->where('id', '!=', $product->id)

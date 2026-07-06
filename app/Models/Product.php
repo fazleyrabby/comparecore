@@ -66,6 +66,19 @@ class Product extends Model
     }
 
     /**
+     * Pricing plans relation.
+     */
+    public function pricingPlans()
+    {
+        return $this->hasMany(PricingPlan::class)->orderBy('sort_order');
+    }
+
+    public function affiliateLinks()
+    {
+        return $this->hasMany(AffiliateLink::class)->orderBy('sort_order');
+    }
+
+    /**
      * Scope to filter products by a specific dynamic attribute value in JSONB.
      */
     public function scopeWithAttribute($query, string $key, $value)
